@@ -14,6 +14,7 @@ using namespace std;
 	@return true si la lectura ha sido correcta, false en caso contrario
 	*/
 
+  /***************************************************************************************************
 bool load(conjunto &  cm, const string & s) {
  ifstream fe;
  string cadena;
@@ -46,27 +47,13 @@ bool load(conjunto &  cm, const string & s) {
  }
 
 
+***************************************************************************************************/
+
+
 int main(int argc, char *argv[]){
 
-    conjunto conjuntoMutaciones;
-    string query_str; 
+  /***************************************************************************************************
 
-    //Cargar las mutaciones en vectorSNPs
-    load(conjuntoMutaciones, "clinvar_20160831.vcf");
-    
-    //Imprimir número de elementos almacenados en conjuntoMutaciones
-    cout << "Lectura del fichero finalizada. Mutaciones cargadas: "<<conjuntoMutaciones.size()<<endl;  
-
-    //Imprimir cuántas mutaciones están asociadas al cromosoma 1:
-    cout << "Mutaciones asociadas a Chr 1: "<< conjuntoMutaciones.lower_bound("2", 1)<< endl; 
-
-    /**@todo ¿Existe la mutación con ID "rs147165522"? Imprimir la mutación y las enfermedades asociadas */
-
-    /**@todo ¿Existe la mutación en chr/pos "14"/67769578? Imprimir la mutación y las enfermedades asociadas */
-
-    /**@todo ¿Cómo podríamos calcular el número de mutaciones del cromosoma 3? (utiliza lower_bound / upper_bound) */
-
-    /**@todo Analiza la eficiencia teórica y empírica de las operaciones find, insert y erase */
-
-   return 0;
+  ***************************************************************************************************/
+  return 0;
 }

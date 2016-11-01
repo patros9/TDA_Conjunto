@@ -29,10 +29,6 @@ using namespace std;
  @todo Implementa esta clase siguiendo la especificación asociada
  */
 
-
-
-
-
 class conjunto
 {  
 public:
@@ -70,10 +66,9 @@ public:
 	\endverbatim
 
 	*/
-	pair<conjunto::value_type,bool>  find (const str & chr, const unsigned int & pos) const;
-	pair<conjunto::value_type,bool>  find (const str & ID) const;
-	pair<conjunto::value_type,bool>  find (const conjunto::value_type & e) const;
-
+	pair<conjunto::value_type,bool>  find ( const string & chr, const unsigned int & pos ) const;
+	pair<conjunto::value_type,bool>  find ( const string & ID) const;
+	pair<conjunto::value_type,bool>  find ( const conjunto::value_type & e) const;
 
 
 	/** @brief cuenta cuantas entradas coinciden con los parámetros dados. 
@@ -84,10 +79,10 @@ public:
 	@return Como el conjunto de mutaciones no puede tener entradas repetidas, devuelve 1 (si se encuentra la entrada) o 0 (si no se encuentra).
 	@post no modifica el conjunto.
 	*/
-	conjunto::size_type count (const str & chr, const unsigned int & pos) const; 
-	conjunto::size_type count (const str & ID) const; 
-	conjunto::size_type count (const conjunto::value_type & e) const; 
 
+	conjunto::size_type count (const string & chr, const unsigned int & pos) const; 
+	conjunto::size_type count (const string & ID) const; 
+	conjunto::size_type count (const conjunto::value_type & e) const; 
 
 
 	/** @brief Inserta una entrada en el conjunto
@@ -95,11 +90,10 @@ public:
 	@return true si la entrada se ha podido insertar con éxito, esto es, no existe una mutación con igual par chr/pos ni igual ID en el conjunto. False en caso contrario. 
 	@post Si e no esta en el conjunto, el size() sera incrementado en 1.
 	*/
-	bool insert( const conjunto::value_type & e);
 
+	bool insert( const conjunto::value_type & e);
 	
-	
-	/** @brief Borra una entrada en el conjunto .
+	/** @brief Borra una entrada en el conjunto.
 	Busca la entrada con chr/pos o id en el conjunto (utiliza e.getID() en el tercer caso) y si la encuentra la borra.
 	@param[in] chr de la mutación a borrar.
 	@param[in] pos de la mutación a borrar.
@@ -107,26 +101,29 @@ public:
 	@param[in] e entrada con e.getID() que geremos borrar, el resto de los valores no son tenidos en cuenta
 	@post Si esta en el conjunto su tamaño se decrementa en 1.
 	*/
-	bool erase(const str & chr, const unsigned int & pos);
+
+	bool erase(const string & chr, const unsigned int & pos);
 	bool erase(const string & ID);
     bool erase(const conjunto::value_type & e);
-         
 
 	/** @brief Borra todas las entradas del conjunto, dejandolo vacio.
 	@post El conjunto se modifica, quedando vacio. 
 	*/
+
 	void clear();
+
 
 	/** @brief numero de entradas en el conjunto
 	@post  No se modifica el conjunto.
 	@return numero de entradas en el conjunto
 	*/
-	size_type size() const ;
 
+	conjunto::size_type size() const ;
 
 	/** @brief Chequea si el conjunto esta vacio (size()==0)
 	@post  No se modifica el conjunto.
 	*/
+
   	bool empty() const;
 
 
@@ -134,33 +131,36 @@ public:
 	@param[in] org conjunto a copiar.
 	@return Crea y devuelve un conjunto duplicado exacto de org.
 	*/
+
 	conjunto & operator=( const conjunto & org);
 
 	/** @brief begin del conjunto
 	@return Devuelve un iterador al primer elemento del conjunto. Si no existe devuelve end
 	@post no modifica el conjunto.
 	*/
+
 	conjunto::iterator begin ();
 
 	/** @brief end del conjunto
-	@return Devuelve un iterador al final del conjunto (posicion siguiente al ultimo.
+	@return Devuelve un iterador al final del conjunto (posicion siguiente al ultimo).
 	@post no modifica el conjunto.
 	*/
+
 	conjunto::iterator end ();
 
 	/** @brief begin del conjunto
 	@return Devuelve un iterador constante al primer elemento del conjunto. Si no existe devuelve end
 	@post no modifica el conjunto.
 	*/
+
 	conjunto::const_iterator cbegin () const;
 
 	/** @brief end del conjunto
 	@return Devuelve un iterador constante al final del conjunto (posicion siguiente al ultimo.
 	@post no modifica el conjunto.
 	*/
+
 	conjunto::const_iterator cend () const;
-
-
 
 
 	/** @brief busca primer elemento por debajo ('antes', '<') de los parámetros dados. 
@@ -172,10 +172,12 @@ public:
 	Si no existe devuelve end
 	@post no modifica el conjunto.
 	*/
-	conjunto::iterator lower_bound (const str & chr, const unsigned int & pos) const; 
+	
+	/***************************************************************************************************
+	conjunto::iterator lower_bound (const string & chr, const unsigned int & pos) const; 
 	conjunto::iterator lower_bound (const conjunto::value_type & e) const; 
 
-
+	***************************************************************************************************/
 
 	/** @brief busca primer elemento por encima ('después', '>') de los parámetros dados. 
 	@param[in] chr de la mutación.
@@ -186,9 +188,11 @@ public:
 	Si no existe devuelve end
 	@post no modifica el conjunto.
 	*/
+	/***************************************************************************************************
 	conjunto::iterator upper_bound (const str & chr, const unsigned int & pos) const; 
 	conjunto::iterator upper_bound (const conjunto::value_type & e) const; 
 
+	***************************************************************************************************/
 	   
 	 
 private:
@@ -210,20 +214,17 @@ private:
 	/** @brief Chequea el Invariante de la representacion 
 	    @return true si el invariante es correcto, falso en caso contrario
 	*/
-	bool cheq_rep( ) const;
-	  
-  
- 
 
+	bool cheq_rep( ) const;
+
+	/** @brief imprime todas las entradas del conjunto 
+	@post No se modifica el conjunto.
+	Implementar tambien esta funcion
+	*/
+
+	friend ostream &  operator << ( ostream & sal, const conjunto & C);
 };
 
 
-/** @brief imprime todas las entradas del conjunto 
-@post No se modifica el conjunto.
-Implementar tambien esta funcion
-	*/
-ostream &  operator << ( ostream & sal, const conjunto & C);
-
-	
-
+#include "../src/conjunto.hxx"
 #endif

@@ -11,77 +11,11 @@ mutacion::mutacion( ) {
     setPos      ( 1014143 ); 
     setCommon   ( false );
 }
-mutacion::mutacion ( const mutacion& m ){
+mutacion::mutacion ( const mutacion& m ) {
     Copiar( m );
 }
-mutacion::mutacion(const string & str){
-//A lo mejor no funcionan los enteros de find() cambiarlos a size_t
-   size_t final_sub , inicio_sub = 0;
-   size_t pos_punto = str.find(".");
-   string delimiter = "\t";
-   for(int i = 0; (final_sub = str.find(delimiter)) != pos_punto && i > 4; i++){
-        string token = str.substr(inicio_sub,final_sub);
-        colocar( token, i);
-        inicio_sub = final_sub + delimiter.length();
-   }
-    string DELIMITADOR = ";";
-    size_t gene = str.find("GENEINFO=");
-   string genes = busca(str,gene,DELIMITADOR); //Buscamos todos los genes
-   //const string hola = "GENEINFO=";
-   //string genes = busca(str,hola,DELIMITADOR);
-   size_t inicio = 0;                                  
-   do{
-   string gen = busca(genes,inicio,"|");             //Dentro del string de los genes los separamos
-   addGenes(gen);                                   //vamos añadiendo cada uno de los genes
-   inicio = inicio + gen.size() + 1 ;               //Establecemos donde empieza la busqueda del siguiente gen + 1 del delimitador
-    }while(inicio <= genes.size());                 //Si la busqueda del siguiente gen es la misma que el final del string, hemos acabado
- 
-    string comun = busca(str, str.find("COMMON="),DELIMITADOR);
-    asignarCommon(comun);
- 
-    string frec_refAlt= busca(str, str.find("CAF="),DELIMITADOR);
-    size_t inicio_caf = 0;                                
-        do{
-        string frec = busca(frec_refAlt,inicio_caf,",");            
-        addCaf(frec);                                  
-        inicio_caf = inicio_caf + frec.size() + 1 ;            
-        }while(inicio_caf <= frec_refAlt.size());
- 
-    string names = busca(str, str.find("CLNDBN="), DELIMITADOR);
-    string ids = busca(str, str.find("CLNDSDBID="), DELIMITADOR);
-    string dataBases = busca(str, str.find("CLNDSDB="), DELIMITADOR);
- 
-    size_t inicio_name, inicio_id, inicio_db;
-    inicio_name = inicio_id = inicio_db = 0;
-    do{
-        string local_name = busca(names, inicio_name, "|");
-        string local_id = busca(ids, inicio_id, "|");
-        string local_db = busca(dataBases, inicio_db, "|");
- 
-        enfermedad local_enfermedad(local_name, local_id, local_db);
-        addEnfermedad(local_enfermedad);
- 
-        inicio_name = inicio_name + local_name.size() + 1;
-        inicio_id = inicio_id + local_id.size() + 1;
-        inicio_db = inicio_db + local_db.size() + 1;
-    }while(inicio_name <= names.size());
- 
-    string string_clnsig = busca(str, str.find("CLNSIG="), DELIMITADOR);
-    size_t inicio_clnsig = 0,  contador_clnsig = 0;
-    string local_clnsig;
- 
-    do{
-        if(inicio_clnsig < string_clnsig.size()){
-            local_clnsig = busca(string_clnsig, inicio_clnsig, "|");
-            addClnsig(local_clnsig);
-            inicio_clnsig = inicio_clnsig + local_clnsig.size() + 1 ;
-        }
-        else if(inicio_clnsig >= string_clnsig.size()){
-            addClnsig(local_clnsig);
-        }
-    contador_clnsig++;
-    }while(contador_clnsig <= enfermedades.size());
- 
+mutacion::mutacion( const string & str ) {
+
 }
 
 /*******************************************************************************/
@@ -283,7 +217,7 @@ string mutacion::toString( ) const {
 }
 
 
-string mutacion::busca(string  str,size_t inicio, string delimitador_final){
+string mutacion::busca (string &str,size_t inicio, string delimitador_final){
     string token;
     size_t fin;
     if( inicio != str.size() ){
