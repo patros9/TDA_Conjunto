@@ -11,11 +11,111 @@ mutacion::mutacion( ) {
     setPos      ( 1014143 ); 
     setCommon   ( false );
 }
+
 mutacion::mutacion ( const mutacion& m ) {
     Copiar( m );
 }
+
 mutacion::mutacion( const string & str ) {
 
+    size_t inicio=0;
+    size_t encontrado;
+    string variable_string;
+     
+    // Chr
+    encontrado=str.find("\t",inicio);
+    setChr(str.substr(0,encontrado));
+    inicio=encontrado+1;
+    // Pos
+    encontrado=str.find("\t",inicio);
+    variable_string=str.substr(inicio,encontrado-inicio);
+    setPos(stoi(variable_string));
+    inicio=encontrado+1;
+    // ID
+    encontrado=str.find("\t",inicio);
+    setID(str.substr(inicio,encontrado-inicio));
+    inicio=encontrado+1;
+    // Ref_alt  
+    encontrado=str.find("\t",inicio);
+    addRef_alt(str.substr(inicio,encontrado-inicio));
+    inicio=encontrado+1;
+    // ALT
+    encontrado=str.find("\t",inicio);
+    addRef_alt(str.substr(inicio,encontrado-inicio));
+    inicio=encontrado+1;
+    // Genes
+    string delimitador="GENEINFO=";
+    encontrado=str.find(delimitador,inicio) + delimitador.size();
+    size_t fin_genes= str.find(";",encontrado);
+    addGenes(str.substr(encontrado,fin_genes-encontrado)); // separarlos XXXX:XXXX en vector?!
+    //  CAF
+     
+    delimitador= "CAF=";
+    encontrado=str.find(delimitador,0) +delimitador.size();
+
+    if(str.find(delimitador,0)==std::string::npos)
+    {
+        addCaf(0);
+    }
+    else
+    {
+        size_t fin_caf = str.find(";",encontrado+1);
+        string caf_string = str.substr(encontrado,fin_caf-encontrado);
+         // separarlos X.xxx,X.xxx en vector?!
+        float caf_float = stof(caf_string);
+        addCaf(caf_float);
+         
+         
+        /*
+        delimitador= "CAF=";
+        encontrado=str.find(delimitador,0) + delimitador.size();
+        fin_caf = str.find(";",encontrado+1);
+        size_t inicio_caf = str.find(",",str.find(delimitador,0));
+        caf_string = caf_string.substr(inicio_caf,fin_caf-inicio_caf);
+        caf_float = stof(caf_string);
+        addCaf(caf_float);
+        */
+    }
+     
+     
+    // enfermedad
+    string name_enfermedad;
+    string id_enfermedad;
+    string database_enfermedad;
+    delimitador = "CLNDBN=" ;
+    encontrado=str.find(delimitador,0) + delimitador.size();
+    size_t fin_name=str.find(";",encontrado+1);
+    name_enfermedad=str.substr(encontrado,fin_name-encontrado);
+     
+    delimitador="CLNDSDBID=";
+    encontrado=str.find(delimitador,0) + delimitador.size();
+    size_t fin_id=str.find(";",encontrado);
+    id_enfermedad=str.substr(encontrado,fin_id-encontrado);
+     
+    delimitador="CLNDSDB=";
+    encontrado=str.find(delimitador,0) + delimitador.size();
+    size_t fin_database=str.find(";",encontrado);
+    database_enfermedad=str.substr(encontrado,fin_database-encontrado);
+    enfermedad enfermedad1(name_enfermedad,id_enfermedad,database_enfermedad);
+    addEnfermedad(enfermedad1);
+     
+    // CLNSIG
+    delimitador = "CLNSIG=" ;
+    encontrado=str.find(delimitador,0) + delimitador.size();
+    size_t fin_clnsig = str.find(";",encontrado);
+    addClnsig(str.substr(encontrado, fin_clnsig-encontrado));
+     
+    // Common
+    delimitador = "COMMON=" ;
+    encontrado=str.find(delimitador,0) + delimitador.size();
+    if(encontrado!= std::string::npos){
+        if(str.substr(encontrado,1)=="0")
+            setCommon(0);
+        else
+            setCommon(1);
+    }
+    else
+        setCommon(0);
 }
 
 /*******************************************************************************/
@@ -171,48 +271,55 @@ void mutacion::Copiar( const mutacion & m ) {
 }
 
 string mutacion::toString( ) const {
-    string str;
 
-    str = "ID: " + getID();
+    string str;
+ 
+    str = "Chr: " + getChr();
     str += "    ";
-    str += "chr: " + getChr();
-    str += "    "; 
-    str += "Pos: " + getPos();
-    str += "    "; 
-    
+    str += "Pos: " + to_string( getPos() );
+    str += "    ";
+    str += "ID: " + getID();
+    str += "    ";
+   
     str += "Ref_alt: ";
     vector<string> ref_alt = getRef_alt();
     for ( unsigned i = 0; i < ref_alt.size(); i++ )
         str += ref_alt.at( i ) + " ";
     str += "    ";
-
+ 
     str += "Genes: ";
     vector<string> genes = getGenes();
     for ( unsigned i = 0; i < genes.size(); i++ )
         str += genes.at( i ) + " ";
     str += "    ";
-
-    str += "Common: " + getCommon();
-    vector<float> caf = getCaf();
+   
+ 
+    str += " Common: " + to_string( getCommon() );
+ 
+    str += " Caf " ;
+     vector<float> caf = getCaf();
     for ( unsigned i = 0; i < caf.size(); i++ ) {
-        str += caf.at( i );
+        str += to_string(caf.at( i ));
         str += " ";
     }
     str += "    ";
-
+   
     str += "enfermedades: ";
-    vector<enfermedad> enfermedades;
-    for ( unsigned i = 0; i < enfermedades.size(); i++ )
-        str += enfermedades.at( i ).toString() + " ";
+    vector<enfermedad> enfermedades = getEnfermedades();
+    for ( unsigned i = 0; i < enfermedades.size(); i++ ){
+        string prueba;
+        prueba=enfermedades[i].toString();
+        str += prueba;
+    }
     str += "    ";
-
+ 
     str += "Clnsig: ";
     vector<int> clnsig = getClnsig();
     for ( unsigned i = 0; i < clnsig.size(); i++ )
-        str += clnsig.at( i ) + " ";
-
+        str += to_string(clnsig.at( i )) + " ";
+ 
     str += "\n";
-
+ 
     return str;
 }
 
