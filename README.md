@@ -1,10 +1,9 @@
 # TDA_Conjunto
 **Sesion 3. Practicas de Estructura de Datos UGR.**
 Tipo de dato abstracto conjunto de mutaciones.
-
 Estructura de la clase:
 
-Cano Gutiérrez, Carlos
+Carlos Cano Gutiérrez.
 
 Implementación:
 
