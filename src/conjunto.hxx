@@ -232,7 +232,7 @@ conjunto::iterator conjunto::lower_bound (const conjunto::value_type & e) {
 
 	while ( (*lower) != e && lower != end() ) {
 		lower++; 
-	}+
+	}
 
 	lower--;
 
