@@ -237,6 +237,21 @@ bool mutacion::operator== ( const mutacion & m ) const {
     return equal;
 }
 
+bool mutacion::operator!= ( const mutacion & m ) const {
+    bool equal = ( getID()           == m.getID()           ) &&
+                 ( getChr()          == m.getChr()          ) &&
+                 ( getPos()          == m.getPos()          ) &&
+                 ( getRef_alt()      == m.getRef_alt()      ) &&
+                 ( getGenes()        == m.getGenes()        ) &&
+                 ( getCommon()       == m.getCommon()       ) &&
+                 ( getCaf()          == m.getCaf()          ) &&
+                 ( getEnfermedades() == m.getEnfermedades() ) &&
+                 ( getClnsig()       == m.getClnsig()       );
+
+    return !equal;
+}
+
+
 bool mutacion::operator<(const mutacion & m) const {
 
     bool es_menor = false;
