@@ -213,33 +213,50 @@ conjunto::const_iterator conjunto::cend () const {
 	return final;
 }
 
+conjunto::iterator conjunto::lower_bound (const string & chr, const unsigned int & pos) {
 
-/*
-conjunto::iterator conjunto::lower_bound (const string & chr, const unsigned int & pos) const {
+	conjunto::iterator lower = begin();
 
-	//ISSUE::Implementar
-	conjunto::iterator lower;
+	while ( (*lower).getChr() != chr && (*lower).getPos() != pos && lower != end() ) {
+		lower++; 
+	}
+
+	lower--;
+	
+	return lower;
+}
+
+conjunto::iterator conjunto::lower_bound (const conjunto::value_type & e) {
+
+	conjunto::iterator lower = begin();
+
+	while ( (*lower) != e && lower != end() ) {
+		lower++; 
+	}+
+
+	lower--;
 
 	return lower;
 }
 
-conjunto::iterator conjunto::lower_bound (const conjunto::value_type & e) const {
-
-	//ISSUE::Implementar
-	conjunto::iterator lower;
-
-	return lower;
-}
-
-conjunto::iterator conjunto::upper_bound (const str & chr, const unsigned int & pos) const {
+conjunto::iterator conjunto::upper_bound (const string & chr, const unsigned int & pos) {
 	
-	//ISSUE::Implementar
+	conjunto::iterator upper = begin();
+
+	do { upper++; } 
+	while ( (*upper).getChr() != chr && (*upper).getPos() != pos && upper != end() );
+
+	return upper;
 }
-conjunto::iterator conjunto::upper_bound (const conjunto::value_type & e) const {
+conjunto::iterator conjunto::upper_bound (const conjunto::value_type & e) {
 	
-	//ISSUE::Implementar
-} 
-*/
+	conjunto::iterator upper = begin();
+
+	do { upper++; } 
+	while ( (*upper) != e && upper != end() );
+
+	return upper;
+}
 
 bool conjunto::cheq_rep( ) const {
 
