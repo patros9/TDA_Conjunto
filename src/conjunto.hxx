@@ -111,9 +111,28 @@ bool conjunto::insert( const conjunto::value_type & e) {
 	bool existe_ya = par.second;
 
 	if( !existe_ya )
-		vm.push_back( e );
+	{
+		// Amplio el vector una posicion más.
+		conjunto::value_type m;
+		vm.push_back( m );
+
+		// Busco primer elemento mas grande.
+		conjunto::iterator upper = begin();
+
+		do { upper++; } 
+		while ( *upper < e );
+
+		// Muevo todos los elementos una posicion hacia la derecha
+		for ( iterator iter = end()-1; iter != upper ; iter-- )
+			*(iter+1) = *(iter);
+	}
 
 	return existe_ya;
+}
+
+void conjunto::push_back( const conjunto::value_type & e) {
+
+	vm.push_back( e );
 }
 
 bool conjunto::erase( const string & chr, const unsigned int & pos ) {
@@ -213,11 +232,11 @@ conjunto::const_iterator conjunto::cend () const {
 	return final;
 }
 
-conjunto::iterator conjunto::lower_bound (const string & chr, const unsigned int & pos) {
+conjunto::const_iterator conjunto::lower_bound (const string & chr, const unsigned int & pos) const {
 
-	conjunto::iterator lower = begin();
+	conjunto::const_iterator lower = cbegin();
 
-	while ( (*lower).getChr() != chr && (*lower).getPos() != pos && lower != end() ) {
+	while ( (*lower).getChr() != chr && (*lower).getPos() != pos && lower != cend() ) {
 		lower++; 
 	}
 
@@ -226,36 +245,23 @@ conjunto::iterator conjunto::lower_bound (const string & chr, const unsigned int
 	return lower;
 }
 
-conjunto::iterator conjunto::lower_bound (const conjunto::value_type & e) {
+conjunto::const_iterator conjunto::lower_bound (const conjunto::value_type & e) const {
 
-	conjunto::iterator lower = begin();
-
-	while ( (*lower) != e && lower != end() ) {
-		lower++; 
-	}
-
-	lower--;
-
-	return lower;
+	return lower_bound( e.getChr(), e.getPos() );
 }
 
-conjunto::iterator conjunto::upper_bound (const string & chr, const unsigned int & pos) {
+conjunto::const_iterator conjunto::upper_bound (const string & chr, const unsigned int & pos) const {
 	
-	conjunto::iterator upper = begin();
+	conjunto::const_iterator upper = cbegin();
 
 	do { upper++; } 
-	while ( (*upper).getChr() != chr && (*upper).getPos() != pos && upper != end() );
+	while ( (*upper).getChr() != chr && (*upper).getPos() != pos && upper != cend() );
 
 	return upper;
 }
-conjunto::iterator conjunto::upper_bound (const conjunto::value_type & e) {
-	
-	conjunto::iterator upper = begin();
+conjunto::const_iterator conjunto::upper_bound (const conjunto::value_type & e) const {
 
-	do { upper++; } 
-	while ( (*upper) != e && upper != end() );
-
-	return upper;
+	return upper_bound( e.getChr(), e.getPos() );
 }
 
 bool conjunto::cheq_rep( ) const {

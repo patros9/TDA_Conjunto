@@ -92,6 +92,12 @@ public:
 	*/
 
 	bool insert( const conjunto::value_type & e);
+
+	/** @brief Añade una entrada al final del conjunto
+	@param e entrada a insertar
+	*/
+
+	void push_back( const conjunto::value_type & e);
 	
 	/** @brief Borra una entrada en el conjunto.
 	Busca la entrada con chr/pos o id en el conjunto (utiliza e.getID() en el tercer caso) y si la encuentra la borra.
@@ -173,8 +179,8 @@ public:
 	@post no modifica el conjunto.
 	*/
 	
-	conjunto::iterator lower_bound (const string & chr, const unsigned int & pos); 
-	conjunto::iterator lower_bound (const conjunto::value_type & e); 
+	conjunto::const_iterator lower_bound (const string & chr, const unsigned int & pos) const; 
+	conjunto::const_iterator lower_bound (const conjunto::value_type & e) const; 
 
 	/** @brief busca primer elemento por encima ('después', '>') de los parámetros dados. 
 	@param[in] chr de la mutación.
@@ -186,8 +192,8 @@ public:
 	@post no modifica el conjunto.
 	*/
 
-	conjunto::iterator upper_bound (const string & chr, const unsigned int & pos); 
-	conjunto::iterator upper_bound (const conjunto::value_type & e); 
+	conjunto::const_iterator upper_bound (const string & chr, const unsigned int & pos) const; 
+	conjunto::const_iterator upper_bound (const conjunto::value_type & e) const; 
 
 	   
 	 
