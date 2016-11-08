@@ -11,77 +11,111 @@ mutacion::mutacion( ) {
     setPos      ( 1014143 ); 
     setCommon   ( false );
 }
-mutacion::mutacion ( const mutacion& m ){
+
+mutacion::mutacion ( const mutacion& m ) {
     Copiar( m );
 }
-mutacion::mutacion(const string & str){
-//A lo mejor no funcionan los enteros de find() cambiarlos a size_t
-   size_t final_sub , inicio_sub = 0;
-   size_t pos_punto = str.find(".");
-   string delimiter = "\t";
-   for(int i = 0; (final_sub = str.find(delimiter)) != pos_punto && i > 4; i++){
-        string token = str.substr(inicio_sub,final_sub);
-        colocar( token, i);
-        inicio_sub = final_sub + delimiter.length();
-   }
-    string DELIMITADOR = ";";
-    size_t gene = str.find("GENEINFO=");
-   string genes = busca(str,gene,DELIMITADOR); //Buscamos todos los genes
-   //const string hola = "GENEINFO=";
-   //string genes = busca(str,hola,DELIMITADOR);
-   size_t inicio = 0;                                  
-   do{
-   string gen = busca(genes,inicio,"|");             //Dentro del string de los genes los separamos
-   addGenes(gen);                                   //vamos añadiendo cada uno de los genes
-   inicio = inicio + gen.size() + 1 ;               //Establecemos donde empieza la busqueda del siguiente gen + 1 del delimitador
-    }while(inicio <= genes.size());                 //Si la busqueda del siguiente gen es la misma que el final del string, hemos acabado
- 
-    string comun = busca(str, str.find("COMMON="),DELIMITADOR);
-    asignarCommon(comun);
- 
-    string frec_refAlt= busca(str, str.find("CAF="),DELIMITADOR);
-    size_t inicio_caf = 0;                                
-        do{
-        string frec = busca(frec_refAlt,inicio_caf,",");            
-        addCaf(frec);                                  
-        inicio_caf = inicio_caf + frec.size() + 1 ;            
-        }while(inicio_caf <= frec_refAlt.size());
- 
-    string names = busca(str, str.find("CLNDBN="), DELIMITADOR);
-    string ids = busca(str, str.find("CLNDSDBID="), DELIMITADOR);
-    string dataBases = busca(str, str.find("CLNDSDB="), DELIMITADOR);
- 
-    size_t inicio_name, inicio_id, inicio_db;
-    inicio_name = inicio_id = inicio_db = 0;
-    do{
-        string local_name = busca(names, inicio_name, "|");
-        string local_id = busca(ids, inicio_id, "|");
-        string local_db = busca(dataBases, inicio_db, "|");
- 
-        enfermedad local_enfermedad(local_name, local_id, local_db);
-        addEnfermedad(local_enfermedad);
- 
-        inicio_name = inicio_name + local_name.size() + 1;
-        inicio_id = inicio_id + local_id.size() + 1;
-        inicio_db = inicio_db + local_db.size() + 1;
-    }while(inicio_name <= names.size());
- 
-    string string_clnsig = busca(str, str.find("CLNSIG="), DELIMITADOR);
-    size_t inicio_clnsig = 0,  contador_clnsig = 0;
-    string local_clnsig;
- 
-    do{
-        if(inicio_clnsig < string_clnsig.size()){
-            local_clnsig = busca(string_clnsig, inicio_clnsig, "|");
-            addClnsig(local_clnsig);
-            inicio_clnsig = inicio_clnsig + local_clnsig.size() + 1 ;
-        }
-        else if(inicio_clnsig >= string_clnsig.size()){
-            addClnsig(local_clnsig);
-        }
-    contador_clnsig++;
-    }while(contador_clnsig <= enfermedades.size());
- 
+
+mutacion::mutacion( const string & str ) {
+
+    size_t inicio=0;
+    size_t encontrado;
+    string variable_string;
+     
+    // Chr
+    encontrado=str.find("\t",inicio);
+    setChr(str.substr(0,encontrado));
+    inicio=encontrado+1;
+    // Pos
+    encontrado=str.find("\t",inicio);
+    variable_string=str.substr(inicio,encontrado-inicio);
+    setPos(stoi(variable_string));
+    inicio=encontrado+1;
+    // ID
+    encontrado=str.find("\t",inicio);
+    setID(str.substr(inicio,encontrado-inicio));
+    inicio=encontrado+1;
+    // Ref_alt  
+    encontrado=str.find("\t",inicio);
+    addRef_alt(str.substr(inicio,encontrado-inicio));
+    inicio=encontrado+1;
+    // ALT
+    encontrado=str.find("\t",inicio);
+    addRef_alt(str.substr(inicio,encontrado-inicio));
+    inicio=encontrado+1;
+    // Genes
+    string delimitador="GENEINFO=";
+    encontrado=str.find(delimitador,inicio) + delimitador.size();
+    size_t fin_genes= str.find(";",encontrado);
+    addGenes(str.substr(encontrado,fin_genes-encontrado)); // separarlos XXXX:XXXX en vector?!
+    //  CAF
+     
+    delimitador= "CAF=";
+    encontrado=str.find(delimitador,0) +delimitador.size();
+
+    if(str.find(delimitador,0)==std::string::npos)
+    {
+        addCaf(0);
+    }
+    else
+    {
+        size_t fin_caf = str.find(";",encontrado+1);
+        string caf_string = str.substr(encontrado,fin_caf-encontrado);
+         // separarlos X.xxx,X.xxx en vector?!
+        float caf_float = stof(caf_string);
+        addCaf(caf_float);
+         
+         
+        /*
+        delimitador= "CAF=";
+        encontrado=str.find(delimitador,0) + delimitador.size();
+        fin_caf = str.find(";",encontrado+1);
+        size_t inicio_caf = str.find(",",str.find(delimitador,0));
+        caf_string = caf_string.substr(inicio_caf,fin_caf-inicio_caf);
+        caf_float = stof(caf_string);
+        addCaf(caf_float);
+        */
+    }
+     
+     
+    // enfermedad
+    string name_enfermedad;
+    string id_enfermedad;
+    string database_enfermedad;
+    delimitador = "CLNDBN=" ;
+    encontrado=str.find(delimitador,0) + delimitador.size();
+    size_t fin_name=str.find(";",encontrado+1);
+    name_enfermedad=str.substr(encontrado,fin_name-encontrado);
+     
+    delimitador="CLNDSDBID=";
+    encontrado=str.find(delimitador,0) + delimitador.size();
+    size_t fin_id=str.find(";",encontrado);
+    id_enfermedad=str.substr(encontrado,fin_id-encontrado);
+     
+    delimitador="CLNDSDB=";
+    encontrado=str.find(delimitador,0) + delimitador.size();
+    size_t fin_database=str.find(";",encontrado);
+    database_enfermedad=str.substr(encontrado,fin_database-encontrado);
+    enfermedad enfermedad1(name_enfermedad,id_enfermedad,database_enfermedad);
+    addEnfermedad(enfermedad1);
+     
+    // CLNSIG
+    delimitador = "CLNSIG=" ;
+    encontrado=str.find(delimitador,0) + delimitador.size();
+    size_t fin_clnsig = str.find(";",encontrado);
+    addClnsig(str.substr(encontrado, fin_clnsig-encontrado));
+     
+    // Common
+    delimitador = "COMMON=" ;
+    encontrado=str.find(delimitador,0) + delimitador.size();
+    if(encontrado!= std::string::npos){
+        if(str.substr(encontrado,1)=="0")
+            setCommon(0);
+        else
+            setCommon(1);
+    }
+    else
+        setCommon(0);
 }
 
 /*******************************************************************************/
@@ -237,53 +271,60 @@ void mutacion::Copiar( const mutacion & m ) {
 }
 
 string mutacion::toString( ) const {
-    string str;
 
-    str = "ID: " + getID();
+    string str;
+ 
+    str = "Chr: " + getChr();
     str += "    ";
-    str += "chr: " + getChr();
-    str += "    "; 
-    str += "Pos: " + getPos();
-    str += "    "; 
-    
+    str += "Pos: " + to_string( getPos() );
+    str += "    ";
+    str += "ID: " + getID();
+    str += "    ";
+   
     str += "Ref_alt: ";
     vector<string> ref_alt = getRef_alt();
     for ( unsigned i = 0; i < ref_alt.size(); i++ )
         str += ref_alt.at( i ) + " ";
     str += "    ";
-
+ 
     str += "Genes: ";
     vector<string> genes = getGenes();
     for ( unsigned i = 0; i < genes.size(); i++ )
         str += genes.at( i ) + " ";
     str += "    ";
-
-    str += "Common: " + getCommon();
-    vector<float> caf = getCaf();
+   
+ 
+    str += " Common: " + to_string( getCommon() );
+ 
+    str += " Caf " ;
+     vector<float> caf = getCaf();
     for ( unsigned i = 0; i < caf.size(); i++ ) {
-        str += caf.at( i );
+        str += to_string(caf.at( i ));
         str += " ";
     }
     str += "    ";
-
+   
     str += "enfermedades: ";
-    vector<enfermedad> enfermedades;
-    for ( unsigned i = 0; i < enfermedades.size(); i++ )
-        str += enfermedades.at( i ).toString() + " ";
+    vector<enfermedad> enfermedades = getEnfermedades();
+    for ( unsigned i = 0; i < enfermedades.size(); i++ ){
+        string prueba;
+        prueba=enfermedades[i].toString();
+        str += prueba;
+    }
     str += "    ";
-
+ 
     str += "Clnsig: ";
     vector<int> clnsig = getClnsig();
     for ( unsigned i = 0; i < clnsig.size(); i++ )
-        str += clnsig.at( i ) + " ";
-
+        str += to_string(clnsig.at( i )) + " ";
+ 
     str += "\n";
-
+ 
     return str;
 }
 
 
-string mutacion::busca(string  str,size_t inicio, string delimitador_final){
+string mutacion::busca (string &str,size_t inicio, string delimitador_final){
     string token;
     size_t fin;
     if( inicio != str.size() ){
