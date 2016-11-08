@@ -62,8 +62,8 @@ mutacion::mutacion( const string & str ) {
         size_t fin_caf = str.find(";",encontrado+1);
         string caf_string = str.substr(encontrado,fin_caf-encontrado);
          // separarlos X.xxx,X.xxx en vector?!
-        float caf_float = stof(caf_string);
-        addCaf(caf_float);
+        //float caf_float = stof(caf_string);
+        addCaf(caf_string);
          
          
         /*

@@ -173,11 +173,8 @@ public:
 	@post no modifica el conjunto.
 	*/
 	
-	/***************************************************************************************************
-	conjunto::iterator lower_bound (const string & chr, const unsigned int & pos) const; 
-	conjunto::iterator lower_bound (const conjunto::value_type & e) const; 
-
-	***************************************************************************************************/
+	conjunto::iterator lower_bound (const string & chr, const unsigned int & pos); 
+	conjunto::iterator lower_bound (const conjunto::value_type & e); 
 
 	/** @brief busca primer elemento por encima ('después', '>') de los parámetros dados. 
 	@param[in] chr de la mutación.
@@ -188,11 +185,10 @@ public:
 	Si no existe devuelve end
 	@post no modifica el conjunto.
 	*/
-	/***************************************************************************************************
-	conjunto::iterator upper_bound (const str & chr, const unsigned int & pos) const; 
-	conjunto::iterator upper_bound (const conjunto::value_type & e) const; 
 
-	***************************************************************************************************/
+	conjunto::iterator upper_bound (const string & chr, const unsigned int & pos); 
+	conjunto::iterator upper_bound (const conjunto::value_type & e); 
+
 	   
 	 
 private:
